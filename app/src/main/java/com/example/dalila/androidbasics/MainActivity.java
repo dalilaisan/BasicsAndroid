@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.widget.LinearLayout;
 
 import com.example.dalila.androidbasics.adapters.NotesRecyclerAdapter;
@@ -14,7 +15,7 @@ import com.example.dalila.androidbasics.util.VerticalSpacingItemDecorator;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NotesRecyclerAdapter.OnNoteListener {
 
     private static final String TAG = "MainActivity";
 
@@ -65,9 +66,14 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.addItemDecoration(itemDecorator);
 
         //instantiate the adapter
-        mNotesRecyclerAdapter = new NotesRecyclerAdapter(mNotes);
+        mNotesRecyclerAdapter = new NotesRecyclerAdapter(mNotes, this);
         //lastly, set the adapter to the recycler view
         mRecyclerView.setAdapter(mNotesRecyclerAdapter);
 
+    }
+
+    @Override
+    public void onNoteClick(int position) {
+        Log.d(TAG, "onNoteClick: called " + position);
     }
 }

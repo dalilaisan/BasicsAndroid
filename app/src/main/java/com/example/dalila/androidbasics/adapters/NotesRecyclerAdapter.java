@@ -23,9 +23,11 @@ The first step in buildingan adapers is using a viewHolder class, which is respo
 public class NotesRecyclerAdapter extends RecyclerView.Adapter<NotesRecyclerAdapter.ViewHolder>{
 
     private ArrayList<Note> mNotes = new ArrayList<>();
+    private OnNoteListener mOnNoteListener;
 
-    public NotesRecyclerAdapter(ArrayList<Note> notes) {
+    public NotesRecyclerAdapter(ArrayList<Note> notes, OnNoteListener onNoteListener) {
         this.mNotes = notes;
+        this.mOnNoteListener = onNoteListener;
     }
 
 
@@ -34,7 +36,7 @@ public class NotesRecyclerAdapter extends RecyclerView.Adapter<NotesRecyclerAdap
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.layout_notes_list_item, viewGroup, false);
-        return new ViewHolder(view);
+        return new ViewHolder(view, mOnNoteListener);
     }
 
     //this one is called for every single entry in the list
@@ -52,21 +54,37 @@ public class NotesRecyclerAdapter extends RecyclerView.Adapter<NotesRecyclerAdap
         return mNotes.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView title;
         TextView timestamp;
+        OnNoteListener onNoteListener;
 
-        public ViewHolder(@NonNull View itemView) {
+        public ViewHolder(@NonNull View itemView, OnNoteListener onNoteListener) {
             super(itemView);
             //connect the layout with the class
             title = itemView.findViewById(R.id.note_title);
             timestamp = itemView.findViewById(R.id.note_timestamp);
+            this.onNoteListener = onNoteListener;
+
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            onNoteListener.onNoteClick(getAdapterPosition());
         }
     }
-
     //basically all adapers classes are gonna follow the same general structure, the only thing where they differ is
     //the data type you specify, the layout and the viewholder  because the viewholder represents whatever we have in the layout
     //but the onCreateViewHolder method is goona ba exactly the same, other than the the layout (R.layour.layout_notes_list_item),
     //the onBindViewHolder method is gonna be different depending on the fileds that you have
     //all the getItemCount method ever returns is the size of the list
+
+
+
+    //the best practice is to use an interface to detect clicks on the recycler view
+    //and use it in the viewholder class
+    public interface OnNoteListener{
+        void onNoteClick(int position);
+    }
 }
