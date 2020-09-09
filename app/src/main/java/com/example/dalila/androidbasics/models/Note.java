@@ -3,10 +3,22 @@ package com.example.dalila.androidbasics.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
+
+@Entity(tableName = "notes")
 public class Note implements Parcelable {
 
+    @PrimaryKey(autoGenerate = true)
+    private int id;
+
+    @ColumnInfo(name = "title")
     private String title;
+    @ColumnInfo(name = "content")
     private String content;
+    @ColumnInfo(name = "timestamp")
     private String timeStamp;
 
     public Note(String title, String content, String timeStamp) {
@@ -15,10 +27,14 @@ public class Note implements Parcelable {
         this.timeStamp = timeStamp;
     }
 
+    //we need to use the ignore annotation on one of the constructors because
+    //the room persistence library has to know which constructor to use
+    @Ignore
     public Note() {
     }
 
     protected Note(Parcel in) {
+        id = in.readInt();
         title = in.readString();
         content = in.readString();
         timeStamp = in.readString();
@@ -35,6 +51,15 @@ public class Note implements Parcelable {
             return new Note[size];
         }
     };
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
 
     public String getTitle() {
         return title;
@@ -67,6 +92,7 @@ public class Note implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
         dest.writeString(title);
         dest.writeString(content);
         dest.writeString(timeStamp);
@@ -75,7 +101,8 @@ public class Note implements Parcelable {
     @Override
     public String toString() {
         return "Note{" +
-                "title='" + title + '\'' +
+                "id=" + id +
+                ", title='" + title + '\'' +
                 ", content='" + content + '\'' +
                 ", timeStamp='" + timeStamp + '\'' +
                 '}';
