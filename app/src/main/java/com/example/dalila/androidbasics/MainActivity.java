@@ -73,6 +73,8 @@ public class MainActivity extends AppCompatActivity implements NotesRecyclerAdap
 
     }
 
+    //we use this interface to interpret the click made on the list item
+    //and then we use this method in the activity to send the position of that clicked item
     @Override
     public void onNoteClick(int position) {
         Log.d(TAG, "onNoteClick: called " + position);
