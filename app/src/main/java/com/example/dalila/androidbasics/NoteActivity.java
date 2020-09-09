@@ -18,7 +18,8 @@ import com.example.dalila.androidbasics.util.LinedEditText;
 public class NoteActivity extends AppCompatActivity
         implements View.OnTouchListener,
         GestureDetector.OnGestureListener,
-        GestureDetector.OnDoubleTapListener {
+        GestureDetector.OnDoubleTapListener,
+        View.OnClickListener {
     private static final String TAG = "NoteActivity";
 
     private static final int EDIT_MODE_ENABLED = 1;
@@ -108,10 +109,14 @@ public class NoteActivity extends AppCompatActivity
 
     private void setListeners() {
         //setting a listener on the lined edit text; double tap on that widget for entering edit mode
+        /*generally, setting up gesture and dougle tap listners and such is to you have to use an onTouchListener and then
+        you have to pass that touch event to the gesture listener you wanna use*/
         mLinedEditText.setOnTouchListener(this);
         mGestureDetector = new GestureDetector(this, this);
-        //generally, setting up gesture and dougle tap listners and such is to you have to use an onTouchListener and then
-        // you have to pass that touch event to the gesture listener you wanna use
+
+        mCheck.setOnClickListener(this);
+        mViewTitle.setOnClickListener(this);
+
     }
 
     @Override
@@ -163,5 +168,32 @@ public class NoteActivity extends AppCompatActivity
     @Override
     public boolean onDoubleTapEvent(MotionEvent e) {
         return false;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.toolbar_check:
+                disableEditMode();
+                break;
+            case R.id.note_text_title:
+                enableEditMode();
+                //make the cursor go into the edit text, after it is clicked:
+                mEditTitle.requestFocus();
+                //make the cursor be at the end of the string inside the edit text:
+                mEditTitle.setSelection(mEditTitle.length());
+                break;
+        }
+    }
+
+    //intercepting the click events on the phone's back button
+    @Override
+    public void onBackPressed() {
+        //simulating a click to the check mark
+        if (mMode == EDIT_MODE_ENABLED)
+            onClick(mCheck);
+        else {
+            super.onBackPressed();
+        }
     }
 }
