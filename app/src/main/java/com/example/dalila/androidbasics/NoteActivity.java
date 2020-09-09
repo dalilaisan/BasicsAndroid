@@ -1,11 +1,13 @@
 package com.example.dalila.androidbasics;
 
+import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -57,6 +59,7 @@ public class NoteActivity extends AppCompatActivity
         else{
             //it is not a new note; VIEW MODE
             setNoteProperties();
+            disableContentInteraction();
         }
 
         setListeners();
@@ -76,6 +79,22 @@ public class NoteActivity extends AppCompatActivity
         return true;
     }
 
+    //we want to disable all interactions on the lined edit text, unless edit mode
+    private void disableContentInteraction() {
+        mLinedEditText.setKeyListener(null);
+        mLinedEditText.setFocusable(false);
+        mLinedEditText.setFocusableInTouchMode(false);
+        mLinedEditText.setCursorVisible(false);
+        mLinedEditText.clearFocus();
+    }
+    private void enableContentInteraction() {
+        mLinedEditText.setKeyListener(new EditText(this).getKeyListener());
+        mLinedEditText.setFocusable(true);
+        mLinedEditText.setFocusableInTouchMode(true);
+        mLinedEditText.setCursorVisible(true);
+        mLinedEditText.requestFocus();
+    }
+
     private void enableEditMode() {
         mBackArrowContainer.setVisibility(View.GONE);
         mCheckContainer.setVisibility(View.VISIBLE);
@@ -84,6 +103,8 @@ public class NoteActivity extends AppCompatActivity
         mEditTitle.setVisibility(View.VISIBLE);
 
         mMode = EDIT_MODE_ENABLED;
+
+        enableContentInteraction();
     }
 
     private void disableEditMode() {
@@ -94,6 +115,9 @@ public class NoteActivity extends AppCompatActivity
         mEditTitle.setVisibility(View.GONE);
 
         mMode = EDIT_MODE_DISABLED;
+
+        disableContentInteraction();
+        hideSoftKeyboard();
     }
 
     private void setNoteProperties() {
@@ -174,6 +198,7 @@ public class NoteActivity extends AppCompatActivity
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.toolbar_check:
+                hideSoftKeyboard();
                 disableEditMode();
                 break;
             case R.id.note_text_title:
@@ -195,5 +220,15 @@ public class NoteActivity extends AppCompatActivity
         else {
             super.onBackPressed();
         }
+    }
+
+    private void hideSoftKeyboard() {
+        InputMethodManager imm = (InputMethodManager) this.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        //get whatever view is currently in focus (where the cursor is basically)
+        View view = this.getCurrentFocus();
+        if (view == null) {
+            view = new View(this);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 }
