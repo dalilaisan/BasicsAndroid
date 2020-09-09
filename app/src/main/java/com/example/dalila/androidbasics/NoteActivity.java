@@ -237,4 +237,23 @@ public class NoteActivity extends AppCompatActivity
         }
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
+
+    //the method that's called when the activity is paused
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("mode", mMode);
+
+    }
+
+    //the method that's called when the activity is recreated
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        //if we rotate the phone in edit mode, we want to stay in edit mode
+        mMode = savedInstanceState.getInt("mode");
+        if (mMode == EDIT_MODE_ENABLED) {
+            enableEditMode();
+        }
+    }
 }
