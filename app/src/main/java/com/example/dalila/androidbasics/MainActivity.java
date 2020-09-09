@@ -2,12 +2,14 @@ package com.example.dalila.androidbasics;
 
 
 import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
 import android.widget.LinearLayout;
 
 import com.example.dalila.androidbasics.adapters.NotesRecyclerAdapter;
@@ -16,7 +18,8 @@ import com.example.dalila.androidbasics.util.VerticalSpacingItemDecorator;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements NotesRecyclerAdapter.OnNoteListener {
+public class MainActivity extends AppCompatActivity implements NotesRecyclerAdapter.OnNoteListener,
+        View.OnClickListener {
 
     private static final String TAG = "MainActivity";
 
@@ -33,6 +36,8 @@ public class MainActivity extends AppCompatActivity implements NotesRecyclerAdap
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mRecyclerView = findViewById(R.id.recycler_view);
+
+        findViewById(R.id.fab).setOnClickListener(this);
 
         initRecyclerView();
         insertFakeNotes();
@@ -81,6 +86,12 @@ public class MainActivity extends AppCompatActivity implements NotesRecyclerAdap
 
         Intent intent = new Intent(this, NoteActivity.class);
         intent.putExtra("selected_note", mNotes.get(position));
+        startActivity(intent);
+    }
+
+    @Override
+    public void onClick(View v) {
+        Intent intent = new Intent(this, NoteActivity.class);
         startActivity(intent);
     }
 }
