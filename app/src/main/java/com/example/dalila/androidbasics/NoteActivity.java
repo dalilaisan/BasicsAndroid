@@ -141,6 +141,8 @@ public class NoteActivity extends AppCompatActivity
         mCheck.setOnClickListener(this);
         mViewTitle.setOnClickListener(this);
 
+        mBackArrow.setOnClickListener(this);
+
     }
 
     @Override
@@ -207,6 +209,10 @@ public class NoteActivity extends AppCompatActivity
                 mEditTitle.requestFocus();
                 //make the cursor be at the end of the string inside the edit text:
                 mEditTitle.setSelection(mEditTitle.length());
+                break;
+            case R.id.toolbar_back_arrow:
+                //destroy the activity
+                finish();
                 break;
         }
     }
