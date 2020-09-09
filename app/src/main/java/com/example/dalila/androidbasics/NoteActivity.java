@@ -133,7 +133,7 @@ public class NoteActivity extends AppCompatActivity
 
     private void setListeners() {
         //setting a listener on the lined edit text; double tap on that widget for entering edit mode
-        /*generally, setting up gesture and dougle tap listners and such is to you have to use an onTouchListener and then
+        /*generally, setting up gesture and double tap listeners and such is to you have to use an onTouchListener and then
         you have to pass that touch event to the gesture listener you wanna use*/
         mLinedEditText.setOnTouchListener(this);
         mGestureDetector = new GestureDetector(this, this);
