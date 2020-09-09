@@ -19,16 +19,15 @@
             android:background="?attr/colorPrimary">
 
         </android.support.v7.widget.Toolbar>
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/note_text"
-            android:textSize="23sp"
-            android:textColor="@color/black"
-            android:padding="5dp"/>
-
-
     </android.support.design.widget.AppBarLayout>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/note_text"
+        android:textSize="23sp"
+        android:textColor="@color/black"
+        android:padding="5dp"/>
+
 
 </LinearLayout>
