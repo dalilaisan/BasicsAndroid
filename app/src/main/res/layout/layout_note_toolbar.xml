@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="?attr/actionBarSize"
+    android:weightSum="100"
+    android:orientation="horizontal"
+    android:background="@color/colorPrimary"
+    android:gravity="center_vertical">
+
+    <!--inside the toolbar, we have two image button (inside their rel layout containers)
+ on top of each other; since we can view a note either in edit or view mode, one of
+ these image buttons is disabled, the other one enabled; by default, the back arrow is
+ enabled (view mode)-->
+
+
+    <!--relative layout acts as a container for the image button;
+    we want to center the image button inside the relative layout using the
+    layout_centerInParent property-->
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="10"
+        android:id="@+id/back_arrow_container"
+        android:visibility="visible">
+        
+        <ImageButton
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_arrow_back_black_24dp"
+            android:background="?attr/selectableItemBackground"
+            android:id="@+id/toolbar_back_arrow"
+            android:layout_centerInParent="true"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="10"
+        android:id="@+id/check_container"
+        android:visibility="gone">
+
+        <ImageButton
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_check_black_24dp"
+            android:background="?attr/selectableItemBackground"
+            android:id="@+id/toolbar_check"
+            android:layout_centerInParent="true"/>
+    </RelativeLayout>
+
+
+    <!--just like with the image buttons, the text view (for view mode) and the
+     edit text (for edit mode) are on top of each other and when one is visible,
+     the other one is gone; by default, the text viev is visible (view mode)-->
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="85"
+        android:id="@+id/note_text_title"
+        android:text="title of note"
+        android:textColor="@color/black"
+        android:layout_marginStart="15dp"
+        android:textSize="23sp"
+        android:visibility="visible"
+        android:layout_marginLeft="15dp" />
+
+    <EditText
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="85"
+        android:id="@+id/note_edit_title"
+        android:text="title of note"
+        android:textColor="@color/black"
+        android:layout_marginStart="15dp"
+        android:textSize="23sp"
+        android:visibility="gone"
+        android:background="@color/white"
+        android:padding="2dp"
+        android:layout_marginLeft="15dp" />
+
+</LinearLayout>
