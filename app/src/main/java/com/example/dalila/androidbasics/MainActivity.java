@@ -1,8 +1,10 @@
 package com.example.dalila.androidbasics;
 
 
+import android.arch.lifecycle.Observer;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,9 +18,11 @@ import android.widget.LinearLayout;
 
 import com.example.dalila.androidbasics.adapters.NotesRecyclerAdapter;
 import com.example.dalila.androidbasics.models.Note;
+import com.example.dalila.androidbasics.persistence.NoteRepository;
 import com.example.dalila.androidbasics.util.VerticalSpacingItemDecorator;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements NotesRecyclerAdapter.OnNoteListener,
         View.OnClickListener {
@@ -31,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements NotesRecyclerAdap
     //vars
     private ArrayList<Note> mNotes = new ArrayList<>();
     private NotesRecyclerAdapter mNotesRecyclerAdapter;
+    private NoteRepository mNoteRepository;
 
 
     @Override
@@ -41,12 +46,45 @@ public class MainActivity extends AppCompatActivity implements NotesRecyclerAdap
 
         findViewById(R.id.fab).setOnClickListener(this);
 
+        mNoteRepository = new NoteRepository(this);
+
         initRecyclerView();
-        insertFakeNotes();
+        retrieveNotes();
 
         //setting the title for the actionbar
         setSupportActionBar((Toolbar) findViewById(R.id.notes_toolbar));
         setTitle("Notes");
+    }
+
+    /*any of the calls using liveDtaa are by default asynchronous, so they operate on a background thread,
+    which is exactly what we need because we cannot do db transactions on the main thread
+     */
+    private void retrieveNotes() {
+        /*the way LiveData objects work is that you call a method that returns a
+        LiveDtaa object and then you observe changes to it, so any time there is a change
+        done to the LiveDta object, this method will trigger*/
+        mNoteRepository.retrieveNotesTask().observe(this, new Observer<List<Note>>() {
+            @Override
+            public void onChanged(@Nullable List<Note> notes) {
+                /*any time a change is made to the LiveDtaa object, which is returned from the database,
+                this onChanged method will trigger (it will also trigger as soon as we attach the observer,
+                so that's how we're able to retrieve a list objects right away when the method retrieveNotes is called)
+                 */
+                /*
+                basically it's like we are attaching a listener to the database, so any time
+                new data is inserted/deleted/updated, this observer will call the onChange method
+                and it's going to re-query that list of notes (clear them if there's already noted and
+                add them all again and then it's gonna tell the adapter that the dataset has changed)
+                 */
+                if (mNotes.size() > 0) {
+                    mNotes.clear();
+                }
+                if (notes != null) {
+                    mNotes.addAll(notes);
+                }
+                mNotesRecyclerAdapter.notifyDataSetChanged();
+            }
+        });
     }
 
 
