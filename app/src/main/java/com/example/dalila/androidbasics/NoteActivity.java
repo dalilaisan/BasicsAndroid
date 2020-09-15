@@ -41,6 +41,8 @@ public class NoteActivity extends AppCompatActivity
     private int mMode;
 
     private NoteRepository mNoteRepository;
+    //the only time we save a change ona note is when the title is changed or when the edit text is changed
+    private Note mFinalNote;
 
 
     @Override
@@ -76,6 +78,7 @@ public class NoteActivity extends AppCompatActivity
     public boolean getIncomingIntent() {
         if (getIntent().hasExtra("selected_note")){
             mInitialNote = getIntent().getParcelableExtra("selected_note");
+            mFinalNote = getIntent().getParcelableExtra("selected_note");
 
             mMode = EDIT_MODE_DISABLED;
             mIsNewNote = false;
@@ -125,7 +128,22 @@ public class NoteActivity extends AppCompatActivity
 
         disableContentInteraction();
 
-        saveChanges();
+        //compare if the final note is equal to the initial note
+        String temp = mLinedEditText.getText().toString();
+        //remove the new lined and blank spaces
+        temp = temp.replace("\n", "");
+        temp = temp.replace(" ", "");
+        if(temp.length() > 0) {
+            mFinalNote.setTitle(mEditTitle.getText().toString());
+            mFinalNote.setContent(mLinedEditText.getText().toString());
+            String timestamp =  "Sep 2020";
+            mFinalNote.setTimeStamp(timestamp);
+
+            if (mFinalNote.getContent().equals(mInitialNote.getContent())
+                    || mFinalNote.getTitle().equals(mInitialNote.getTitle())){
+                saveChanges();
+            }
+        }
     }
 
     private void saveChanges() {
@@ -138,7 +156,7 @@ public class NoteActivity extends AppCompatActivity
     }
 
     private void saveNewNote() {
-        mNoteRepository.insertNoteTask(mInitialNote);
+        mNoteRepository.insertNoteTask(mFinalNote);
     }
 
     private void setNoteProperties() {
@@ -150,6 +168,11 @@ public class NoteActivity extends AppCompatActivity
     private void setNewNoteProperties() {
         mViewTitle.setText("Note title");
         mEditTitle.setText("Note title");
+
+        mInitialNote = new Note();
+        mFinalNote = new Note();
+        mInitialNote.setTitle("Note title");
+        mFinalNote.setTitle("Note title");
     }
 
     private void setListeners() {
