@@ -141,6 +141,8 @@ public class MainActivity extends AppCompatActivity implements NotesRecyclerAdap
     private void deleteNote(Note note) {
         mNotes.remove(note);
         mNotesRecyclerAdapter.notifyDataSetChanged();
+
+        mNoteRepository.deleteNotesTask(note);
     }
 
     //we ue the itemtouchhelper to move/swipe items in the recycler view

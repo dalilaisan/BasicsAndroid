@@ -82,7 +82,17 @@ public class NoteActivity extends AppCompatActivity
     public boolean getIncomingIntent() {
         if (getIntent().hasExtra("selected_note")){
             mInitialNote = getIntent().getParcelableExtra("selected_note");
-            mFinalNote = getIntent().getParcelableExtra("selected_note");
+
+            /*
+            we have to make a new Note object for mFinalNote, otherwise mInitiaNote
+            and mFinalNote are going to be assigned the same object in memory and thus
+            always be equal when we compare them in the saveChanges method
+             */
+            mFinalNote = new Note();
+            mFinalNote.setTitle(mInitialNote.getTitle());
+            mFinalNote.setContent(mInitialNote.getContent());
+            mFinalNote.setTimeStamp(mInitialNote.getTimeStamp());
+            mFinalNote.setId(mInitialNote.getId());
 
             mMode = EDIT_MODE_DISABLED;
             mIsNewNote = false;
@@ -155,8 +165,12 @@ public class NoteActivity extends AppCompatActivity
             saveNewNote();
         }
         else {
-
+            updateNote();
         }
+    }
+
+    private void updateNote() {
+        mNoteRepository.updateNoteTask(mFinalNote);
     }
 
     private void saveNewNote() {
