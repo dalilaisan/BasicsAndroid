@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.example.dalila.androidbasics.models.Note;
 import com.example.dalila.androidbasics.persistence.NoteRepository;
 import com.example.dalila.androidbasics.util.LinedEditText;
+import com.example.dalila.androidbasics.util.Utility;
 
 public class NoteActivity extends AppCompatActivity
         implements View.OnTouchListener,
@@ -139,7 +140,7 @@ public class NoteActivity extends AppCompatActivity
         if(temp.length() > 0) {
             mFinalNote.setTitle(mEditTitle.getText().toString());
             mFinalNote.setContent(mLinedEditText.getText().toString());
-            String timestamp =  "Sep 2020";
+            String timestamp = Utility.getCurrentTimestamp();
             mFinalNote.setTimeStamp(timestamp);
 
             if (mFinalNote.getContent().equals(mInitialNote.getContent())

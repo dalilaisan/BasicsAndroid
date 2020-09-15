@@ -2,6 +2,7 @@ package com.example.dalila.androidbasics.adapters;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.TextView;
 
 import com.example.dalila.androidbasics.R;
 import com.example.dalila.androidbasics.models.Note;
+import com.example.dalila.androidbasics.util.Utility;
 
 import java.util.ArrayList;
 
@@ -21,6 +23,7 @@ The first step in buildingan adapers is using a viewHolder class, which is respo
 
 
 public class NotesRecyclerAdapter extends RecyclerView.Adapter<NotesRecyclerAdapter.ViewHolder>{
+    private static final String TAG = "NotesRecyclerAdapter";
 
     private ArrayList<Note> mNotes = new ArrayList<>();
     private OnNoteListener mOnNoteListener;
@@ -42,9 +45,22 @@ public class NotesRecyclerAdapter extends RecyclerView.Adapter<NotesRecyclerAdap
     //this one is called for every single entry in the list
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
-        //here we set the attributes to the viewHolder object
-        viewHolder.timestamp.setText(mNotes.get(i).getTimeStamp());
-        viewHolder.title.setText(mNotes.get(i).getTitle());
+
+        try{
+            //here we set the attributes to the viewHolder object
+
+            String month = mNotes.get(i).getTimeStamp().substring(0,2);
+            month = Utility.getMonthFromNumber(month);
+            String year = mNotes.get(i).getTimeStamp().substring(3);
+            String timestamp = month + " " + year;
+
+            viewHolder.timestamp.setText(timestamp);
+            viewHolder.title.setText(mNotes.get(i).getTitle());
+        }catch (NullPointerException e) {
+            Log.e(TAG, "onBindViewHolder: NullPointerException " + e.getMessage());
+        }
+
+
 
     }
 
