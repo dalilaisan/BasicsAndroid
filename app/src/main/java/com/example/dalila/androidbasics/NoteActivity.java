@@ -3,6 +3,8 @@ package com.example.dalila.androidbasics;
 import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -22,7 +24,8 @@ public class NoteActivity extends AppCompatActivity
         implements View.OnTouchListener,
         GestureDetector.OnGestureListener,
         GestureDetector.OnDoubleTapListener,
-        View.OnClickListener {
+        View.OnClickListener,
+        TextWatcher {
     private static final String TAG = "NoteActivity";
 
     private static final int EDIT_MODE_ENABLED = 1;
@@ -187,6 +190,8 @@ public class NoteActivity extends AppCompatActivity
 
         mBackArrow.setOnClickListener(this);
 
+        mEditTitle.addTextChangedListener(this);
+
     }
 
     @Override
@@ -299,5 +304,20 @@ public class NoteActivity extends AppCompatActivity
         if (mMode == EDIT_MODE_ENABLED) {
             enableEditMode();
         }
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+        mViewTitle.setText(s.toString());
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+
     }
 }
